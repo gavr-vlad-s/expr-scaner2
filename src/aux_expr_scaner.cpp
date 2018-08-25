@@ -134,6 +134,7 @@ bool Aux_expr_scaner::start_proc()
     }
     lexeme_pos_.begin_pos_ = loc_->pos_;
     lexeme_pos_.end_pos_   = loc_->pos_;
+    lexeme_begin_          = loc_->pcurrent_char_;
     if(belongs(Category::Opened_square_br, char_categories_)){
         automaton_           = A_maybe_class;
         token_.lexeme_.code_ = Aux_expr_lexem_code::Character;

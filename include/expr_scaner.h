@@ -9,23 +9,63 @@
 
 #ifndef EXPR_SCANER_H
 #define EXPR_SCANER_H
+#   include <string>
+#   include <memory>
+#   include <set>
+#   include "../include/expr_lexem_info.h"
+#   include "../include/location.h"
+#   include "../include/errors_and_tries.h"
+#   include "../include/error_count.h"
+#   include "../include/trie_for_set.h"
+#   include "../include/scope.h"
+#   include "../include/aux_expr_scaner.h"
+#   include "../include/aux_expr_lexem.h"
+#   include "../include/abstract_scaner.h"
+#   include "../include/position.h"
 
-#include <string>
-#include <memory>
-#include <set>
-#include "../include/location.h"
-#include "../include/error_count.h"
-#include "../include/trie.h"
-#include "../include/trie_for_set.h"
-#include "../include/expr_lexem_info.h"
-#include "../include/aux_expr_scaner.h"
-#include "../include/aux_expr_lexem.h"
-#include "../include/errors_and_tries.h"
-#include "../include/scope.h"
+namespace escaner{
+    using Expr_token = ascaner::Token<Expr_lexem_info>;
 
-class Expr_scaner{
-public:
-private:
+    class Expr_scaner{
+    public:
+        Expr_scaner()                        = default;
+        Expr_scaner(const Expr_scaner& orig) = default;
+        ~Expr_scaner()                       = default;
+
+        Expr_scaner(const ascaner::Location_ptr&     location,
+                    const Errors_and_tries&          et,
+                    const Trie_for_set_of_char32ptr& trie_for_set,
+                    const std::shared_ptr<Scope>&    scope) :
+            set_trie_(trie_for_set),
+            aux_scaner_(std::make_unique<Aux_expr_scaner>(location, et)),
+            et_(et),
+            loc_(location),
+            scope_(scope)
+            {}
+
+        Expr_token  current_lexeme();
+        char32_t*   lexeme_begin_ptr() const;
+        std::string lexeme_to_string(const Expr_lexem_info& li);
+        std::string token_to_string(const Expr_token& tok);
+        void        back();
+    private:
+        Trie_for_set_of_char32ptr set_trie_;
+        Aux_expr_scaner_ptr       aux_scaner_;
+        Errors_and_tries          et_;
+        Location_ptr              loc_;
+        std::shared_ptr<Scope>    scope_;
+
+        char32_t*                 lexeme_begin_; /* pointer to the lexem begin */
+//         Expr_token                token_;
+        ascaner::Position_range   lexeme_pos_;
+
+        using Aux_token = ascaner::Token<Aux_expr_lexem_info>;
+
+        Aux_token                 aeti_;
+        Aux_expr_lexem_code       aetic_;
+    };
+
+    using Expr_scaner_ptr = std::shared_ptr<Expr_scaner>;
 };
 // class Expr_scaner{
 // public:
@@ -40,14 +80,7 @@ private:
 //     Expr_scaner(const Expr_scaner& orig) = default;
 //     ~Expr_scaner()                       = default;
 //
-//     Expr_lexem_info current_lexem();
-//     size_t          lexem_begin_line_number() const;
-//     void            back();
 // private:
-//     Trie_for_set_of_char32ptr compl_set_trie;
-//     Aux_expr_scaner_ptr       aux_scaner;
-//     Errors_and_tries          et_;
-//     Location_ptr              loc;
 //
 //     size_t                    lexem_begin_line;
 //     char32_t*                 lexem_begin;
@@ -105,9 +138,6 @@ private:
 //     State               state;
 //     size_t              set_idx = 0;
 //
-//     Aux_expr_lexem_info aeli;
-//     Aux_expr_lexem_code aelic;
-//
 //     size_t get_set_complement();
 //
 //     using State_proc = void (Expr_scaner::*)();
@@ -122,6 +152,4 @@ private:
 //
 //     Expr_lexem_info convert_lexeme(const Aux_expr_lexem_info&);
 // };
-//
-// using Expr_scaner_ptr = std::shared_ptr<Expr_scaner>;
 #endif

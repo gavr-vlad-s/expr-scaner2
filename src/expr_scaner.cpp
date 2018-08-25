@@ -1,6 +1,6 @@
 /*
     File:    expr_scaner.cpp
-    Created: 13 December 2015 at 09:05 Moscow time
+    Created: 25 August 2018 at 10:39 Moscow time
     Author:  Гаврилов Владимир Сергеевич
     E-mails: vladimir.s.gavrilov@gmail.com
              gavrilov.vladimir.s@mail.ru
@@ -8,6 +8,37 @@
 */
 
 #include "../include/expr_scaner.h"
+namespace escaner{
+
+    Expr_token Expr_scaner::current_lexeme()
+    {
+        Expr_token eti;
+
+        aetic_        = (aeti_ = aux_scaner_->current_lexeme()).lexeme_.code_;
+        lexeme_pos_   = aeti_.range_;
+        lexeme_begin_ = aux_scaner_->lexem_begin_ptr();
+        switch(aetic_){
+            case Aux_expr_lexem_code::Nothing       ... Aux_expr_lexem_code::Class_xdigits:
+            case Aux_expr_lexem_code::Class_ndq:
+            case Aux_expr_lexem_code::Class_nsq:
+            case Aux_expr_lexem_code::M_Class_Latin ... Aux_expr_lexem_code::M_Class_nsq:
+                eti.lexeme_                    = convert_lexeme(aeli);
+                eti.range_                     = lexeme_pos_;
+                break;
+            case Aux_expr_lexem_code::Begin_char_class_complement:
+                aux_scaner_->back();
+                eti.lexeme_.code_              = Expr_lexem_code::Class_complement;
+                eti.lexeme_.set_of_char_index_ = get_set_complement();
+                break;
+            case Aux_expr_lexem_code::End_char_class_complement:
+                eti.lexeme_.code_              = Expr_lexem_code::UnknownLexem;
+                eti.range_                     = lexeme_pos_;
+        }
+        return eti;
+    }
+
+};
+
 // #include "../include/aux_expr_lexem.h"
 // #include "../include/belongs.h"
 // #include "../include/sets_for_classes.h"
@@ -180,32 +211,6 @@
 //     }
 //     return set_idx;
 // }
-//
-// Expr_lexem_info Expr_scaner::current_lexem()
-// {
-//     Expr_lexem_info     eli;
-//
-//     aelic            = (aeli = aux_scaner-> current_lexem()).code;
-//     lexem_begin_line = aux_scaner->lexem_begin_line_number();;
-//     lexem_begin      = aux_scaner->lexem_begin_ptr();
-//     switch(aelic){
-//         case Aux_expr_lexem_code::Nothing       ... Aux_expr_lexem_code::Class_xdigits:
-//         case Aux_expr_lexem_code::Class_ndq:
-//         case Aux_expr_lexem_code::Class_nsq:
-//         case Aux_expr_lexem_code::M_Class_Latin ... Aux_expr_lexem_code::M_Class_nsq:
-//             eli = convert_lexeme(aeli);
-//             break;
-//         case Aux_expr_lexem_code::Begin_char_class_complement:
-//             aux_scaner->back();
-//             eli.code              = Expr_lexem_code::Class_complement;
-//             eli.set_of_char_index = get_set_complement();
-//             break;
-//         case Aux_expr_lexem_code::End_char_class_complement:
-//             eli.code = Expr_lexem_code::UnknownLexem;
-//     }
-//     return eli;
-// }
-//
 // size_t Expr_scaner::lexem_begin_line_number() const
 // {
 //     return lexem_begin_line;

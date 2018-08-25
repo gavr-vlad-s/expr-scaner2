@@ -10,21 +10,23 @@
 #ifndef EXPR_LEXEM_INFO_H
 #define EXPR_LEXEM_INFO_H
 #include <cstddef>
-enum class Expr_lexem_code : uint16_t {
-    Nothing,             UnknownLexem,        Action,
-    Regexp_name,         Opened_round_brack,  Closed_round_brack,
-    Or,                  Kleene_closure,      Positive_closure,
-    Optional_member,     Character,           Begin_expression,
-    End_expression,      Class_complement,    Character_class
-};
+namespace escaner{
+    enum class Expr_lexem_code : uint16_t {
+        Nothing,             UnknownLexem,        Action,
+        Regexp_name,         Opened_round_brack,  Closed_round_brack,
+        Or,                  Kleene_closure,      Positive_closure,
+        Optional_member,     Character,           Begin_expression,
+        End_expression,      Class_complement,    Character_class
+    };
 
-struct Expr_lexem_info{
-    Expr_lexem_code code;
-    union{
-        size_t      action_name_index;
-        size_t      regexp_name_index;
-        size_t      set_of_char_index;
-        char32_t    c;
+    struct Expr_lexem_info{
+        Expr_lexem_code code_;
+        union{
+            size_t      action_name_index_;
+            size_t      regexp_name_index_;
+            size_t      set_of_char_index_;
+            char32_t    c_;
+        };
     };
 };
 #endif
