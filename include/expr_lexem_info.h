@@ -24,7 +24,7 @@ namespace escaner{
         union{
             size_t      action_name_index_;
             size_t      regexp_name_index_;
-            size_t      set_of_char_index_;
+            size_t      index_of_set_of_char_;
             char32_t    c_;
         };
     };

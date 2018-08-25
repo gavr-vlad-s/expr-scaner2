@@ -52,7 +52,7 @@ namespace escaner{
         Trie_for_set_of_char32ptr set_trie_;
         Aux_expr_scaner_ptr       aux_scaner_;
         Errors_and_tries          et_;
-        Location_ptr              loc_;
+        ascaner::Location_ptr     loc_;
         std::shared_ptr<Scope>    scope_;
 
         char32_t*                 lexeme_begin_; /* pointer to the lexem begin */
@@ -63,6 +63,10 @@ namespace escaner{
 
         Aux_token                 aeti_;
         Aux_expr_lexem_code       aetic_;
+
+        Expr_lexem_info convert_lexeme(const Aux_token&);
+
+        void check_regexp_name(size_t idx);
     };
 
     using Expr_scaner_ptr = std::shared_ptr<Expr_scaner>;
@@ -150,6 +154,5 @@ namespace escaner{
 //     void begin_class_complement_proc(); void first_char_proc();
 //     void body_chars_proc();             void end_class_complement_proc();
 //
-//     Expr_lexem_info convert_lexeme(const Aux_expr_lexem_info&);
 // };
 #endif
