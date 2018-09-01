@@ -118,17 +118,17 @@ namespace escaner{
         *
         */
 
-        State               state;
-        size_t              set_idx = 0;
+        State               state_;
+        size_t              set_idx_ = 0;
 
         size_t get_set_complement();
 
         using State_proc = void (Expr_scaner::*)();
 
 
-        std::set<char32_t>  curr_set;
+        std::set<char32_t>  curr_set_;
 
-        static State_proc procs[];
+        static State_proc   procs_[];
 
         void begin_class_complement_proc(); void first_char_proc();
         void body_chars_proc();             void end_class_complement_proc();

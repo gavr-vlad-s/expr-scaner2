@@ -12,6 +12,7 @@
 #include "../include/sets_for_classes.h"
 #include "../include/idx_to_string.h"
 #include "../include/belongs.h"
+#include "../include/aux_expr_lexem.h"
 
 namespace escaner{
     Expr_token Expr_scaner::current_lexeme()
@@ -126,10 +127,15 @@ namespace escaner{
 
     size_t Expr_scaner::get_set_complement()
     {
-        set_idx = 0;
-        state   = State::Begin_class_complement;
+        set_idx_ = 0;
+        state_   = State::Begin_class_complement;
 
-        curr_set.clear();
+        curr_set_.clear();
+
+        while((aetic_ = (aeti_ = aux_scaner_->current_lexeme()).lexeme_.code_) !=
+              Aux_expr_lexem_code::Nothing)
+        {
+        }
 
 //         while((aelic = (aeli = aux_scaner-> current_lexem()).code) !=
 //             Aux_expr_lexem_code::Nothing)
@@ -139,34 +145,91 @@ namespace escaner{
 //                 break;
 //             }
 //         }
-        return set_idx;
+        return set_idx_;
     }
+
+    Expr_scaner::State_proc Expr_scaner::procs_[] = {
+        &Expr_scaner::begin_class_complement_proc,
+        &Expr_scaner::first_char_proc,
+        &Expr_scaner::body_chars_proc,
+        &Expr_scaner::end_class_complement_proc
+    };
+
+    void Expr_scaner::begin_class_complement_proc()
+    {
+        state_ = State::First_char;
+    }
+
+    static constexpr uint64_t classes_of_chars_without_complement =
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Latin))   |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Letter))  |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Russian)) |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_bdigits)) |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_digits))  |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_latin))   |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_letter))  |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_odigits)) |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_russian)) |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_xdigits));
+
+    static constexpr uint64_t classes_of_chars_with_complement =
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_ndq)) |
+        (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_nsq));
+
+    static inline uint64_t belongs(Aux_expr_lexem_code e, uint64_t s)
+    {
+        return ::belongs(static_cast<uint64_t>(e), s);
+    }
+
+    void Expr_scaner::first_char_proc()
+    {
+        state_ = State::Body_chars;
+        if(Aux_expr_lexem_code::Character == aetic_){
+            curr_set_.insert(aeti_.lexeme_.c_);
+        }else if(belongs(aetic_, classes_of_chars_without_complement)){
+            const auto& s = sets_for_char_classes[char_class_to_array_index(aetic_)];
+            curr_set_.insert(s.begin(), s.end());
+        }else if(belongs(aetic_, classes_of_chars_with_complement)){
+    //         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
+    //         et_.ec->increment_number_of_errors();
+    //     }else{
+    //         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
+    //         et_.ec->increment_number_of_errors();
+        }
+    }
+
+    void Expr_scaner::body_chars_proc()
+    {
+    //     state = State::Body_chars;
+    //     if(Aux_expr_lexem_code::Character == aelic){
+    //         curr_set.insert(aeli.c);
+    //     }else if(belongs(aelic, classes_of_chars_without_complement)){
+    //         const auto& s = sets_for_char_classes[char_class_to_array_index(aelic)];
+    //         curr_set.insert(s.begin(), s.end());
+    //     }else if(belongs(aelic, classes_of_chars_with_complement)){
+    //         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
+    //         et_.ec->increment_number_of_errors();
+    //     }else if(Aux_expr_lexem_code::End_char_class_complement == aelic){
+    //         set_idx = compl_set_trie->insertSet(curr_set);
+    //         state = State::End_class_complement;
+    //     }else{
+    //         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
+    //         et_.ec->increment_number_of_errors();
+    //     }
+    }
+
+    void Expr_scaner::end_class_complement_proc()
+    {
+    }
+
+    // size_t Expr_scaner::lexem_begin_line_number() const
+    // {
+    //     return lexem_begin_line;
+    // }
 
 };
 
-// #include "../include/aux_expr_lexem.h"
 // #include <cstdio>
-//
-// static inline uint64_t belongs(Aux_expr_lexem_code e, uint64_t s)
-// {
-//     return belongs(static_cast<uint64_t>(e), s);
-// }
-//
-// static constexpr uint64_t classes_of_chars_without_complement =
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Latin))   |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Letter))  |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_Russian)) |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_bdigits)) |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_digits))  |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_latin))   |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_letter))  |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_odigits)) |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_russian)) |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_xdigits));
-//
-// static constexpr uint64_t classes_of_chars_with_complement =
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_ndq)) |
-//     (1ULL << static_cast<uint64_t>(Aux_expr_lexem_code::Class_nsq));
 //
 // static const char* not_admissible_nsq_ndq =
 //     "Error at line %zu: character classes [:ndq:] and [:nsq:] are not admissible "
@@ -175,61 +238,6 @@ namespace escaner{
 // static const char* not_admissible_lexeme =
 //     "Error at line %zu: expected a character or character class, with the "
 //     "exception of [:nsq:] and [:ndq:].\n";
-//
-// Expr_scaner::State_proc Expr_scaner::procs[] = {
-//     &Expr_scaner::begin_class_complement_proc,
-//     &Expr_scaner::first_char_proc,
-//     &Expr_scaner::body_chars_proc,
-//     &Expr_scaner::end_class_complement_proc
-// };
-//
-// void Expr_scaner::begin_class_complement_proc()
-// {
-//     state = State::First_char;
-// }
-//
-// void Expr_scaner::first_char_proc()
-// {
-//     state = State::Body_chars;
-//     if(Aux_expr_lexem_code::Character == aelic){
-//         curr_set.insert(aeli.c);
-//     }else if(belongs(aelic, classes_of_chars_without_complement)){
-//         const auto& s = sets_for_char_classes[char_class_to_array_index(aelic)];
-//         curr_set.insert(s.begin(), s.end());
-//     }else if(belongs(aelic, classes_of_chars_with_complement)){
-//         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
-//         et_.ec->increment_number_of_errors();
-//     }else{
-//         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
-//         et_.ec->increment_number_of_errors();
-//     }
-// }
-//
-// void Expr_scaner::body_chars_proc()
-// {
-//     state = State::Body_chars;
-//     if(Aux_expr_lexem_code::Character == aelic){
-//         curr_set.insert(aeli.c);
-//     }else if(belongs(aelic, classes_of_chars_without_complement)){
-//         const auto& s = sets_for_char_classes[char_class_to_array_index(aelic)];
-//         curr_set.insert(s.begin(), s.end());
-//     }else if(belongs(aelic, classes_of_chars_with_complement)){
-//         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
-//         et_.ec->increment_number_of_errors();
-//     }else if(Aux_expr_lexem_code::End_char_class_complement == aelic){
-//         set_idx = compl_set_trie->insertSet(curr_set);
-//         state = State::End_class_complement;
-//     }else{
-//         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
-//         et_.ec->increment_number_of_errors();
-//     }
-// }
-//
-// void Expr_scaner::end_class_complement_proc(){}
-// size_t Expr_scaner::lexem_begin_line_number() const
-// {
-//     return lexem_begin_line;
-// }
 //
 // void Expr_scaner::back()
 // {
