@@ -67,92 +67,73 @@ namespace escaner{
         Expr_lexem_info convert_lexeme(const Aux_token&);
 
         void check_regexp_name(size_t idx);
+
+        enum class State{
+            Begin_class_complement, First_char,
+            Body_chars,             End_class_complement
+        };
+
+        /*
+        * The lexeme 'character class complement' can be descripted as the following
+        * regular expression:
+        *          ab+c
+        * where
+        *      a is the lexeme 'Begin_char_class_complement',
+        *      b is the lexeme 'Character' or 'Character class',
+        *      c is the lexeme 'End_char_class_complement'.
+        *
+        * If we construct a non-deterministic finite automaton by this regexp, next we
+        * build a corresponding deterministic finite automaton, and, finally, we
+        * minimize the deterministic automaton, then we obtain a finite automaton with
+        * the following transition table:
+        *
+        * |-------|---|---|---|--------------|
+        * | State | a | b | c |    Remark    |
+        * |-------|---|---|---|--------------|
+        * |   A   | B |   |   | Begin state. |
+        * |-------|---|---|---|--------------|
+        * |   B   |   | C |   |              |
+        * |-------|---|---|---|--------------|
+        * |   C   |   | C | E |              |
+        * |-------|---|---|---|--------------|
+        * |   E   |   |   |   | End state.   |
+        * |-------|---|---|---|--------------|
+        *
+        * But for ease of writing, we need to introduce more meaningful names for states
+        * of a finite automaton. The following table shows the matching state names from
+        * the previous table and meaningful names. Meaningful names are collected in the
+        * enumeration State.
+        *
+        * |---|------------------------|
+        * |   |    Meaningful name     |
+        * |---|------------------------|
+        * | A | Begin_class_complement |
+        * |---|------------------------|
+        * | B | First_char             |
+        * |---|------------------------|
+        * | C | Body_chars             |
+        * |---|------------------------|
+        * | E | End_class_complement   |
+        * |---|------------------------|
+        *
+        */
+
+        State               state;
+        size_t              set_idx = 0;
+
+        size_t get_set_complement();
+
+        using State_proc = void (Expr_scaner::*)();
+
+
+        std::set<char32_t>  curr_set;
+
+        static State_proc procs[];
+
+        void begin_class_complement_proc(); void first_char_proc();
+        void body_chars_proc();             void end_class_complement_proc();
     };
 
     using Expr_scaner_ptr = std::shared_ptr<Expr_scaner>;
 };
-// class Expr_scaner{
-// public:
-//     Expr_scaner()                        = default;
-//     Expr_scaner(const Location_ptr&              location,
-//                 const Errors_and_tries&          et,
-//                 const Trie_for_set_of_char32ptr& trie_for_complement_of_set) :
-//         compl_set_trie(trie_for_complement_of_set),
-//         aux_scaner(std::make_unique<Aux_expr_scaner>(location, et)),
-//         et_(et), loc(location)
-//         {}
-//     Expr_scaner(const Expr_scaner& orig) = default;
-//     ~Expr_scaner()                       = default;
-//
-// private:
-//
-//     size_t                    lexem_begin_line;
-//     char32_t*                 lexem_begin;
-//
-//     enum class State{
-//         Begin_class_complement, First_char,
-//         Body_chars,             End_class_complement
-//     };
-//
-// /*
-//  * The lexeme 'character class complement' can be descripted as the following regular
-//  * expression:
-//  *          ab+c
-//  * where
-//  *      a is the lexeme 'Begin_char_class_complement',
-//  *      b is the lexeme 'Character' or 'Character class',
-//  *      c is the lexeme 'End_char_class_complement'.
-//  *
-//  * If we construct a non-deterministic finite automaton by this regexp, next we build
-//  * a corresponding deterministic finite automaton, and, finally, we minimize the
-//  * deterministic automaton, then we obtain a finite automaton with the following
-//  * transition table:
-//  *
-//  * |-------|---|---|---|--------------|
-//  * | State | a | b | c |    Remark    |
-//  * |-------|---|---|---|--------------|
-//  * |   A   | B |   |   | Begin state. |
-//  * |-------|---|---|---|--------------|
-//  * |   B   |   | C |   |              |
-//  * |-------|---|---|---|--------------|
-//  * |   C   |   | C | E |              |
-//  * |-------|---|---|---|--------------|
-//  * |   E   |   |   |   | End state.   |
-//  * |-------|---|---|---|--------------|
-//  *
-//  * But for ease of writing, we need to introduce more meaningful names for states of
-//  * a finite automaton. The following table shows the matching state names from the
-//  * previous table and meaningful names. Meaningful names are collected in the enumeration
-//  * State.
-//  *
-//  * |---|------------------------|
-//  * |   |    Meaningful name     |
-//  * |---|------------------------|
-//  * | A | Begin_class_complement |
-//  * |---|------------------------|
-//  * | B | First_char             |
-//  * |---|------------------------|
-//  * | C | Body_chars             |
-//  * |---|------------------------|
-//  * | E | End_class_complement   |
-//  * |---|------------------------|
-//  *
-//  */
-//
-//     State               state;
-//     size_t              set_idx = 0;
-//
-//     size_t get_set_complement();
-//
-//     using State_proc = void (Expr_scaner::*)();
-//
-//
-//     std::set<char32_t>  curr_set;
-//
-//     static State_proc procs[];
-//
-//     void begin_class_complement_proc(); void first_char_proc();
-//     void body_chars_proc();             void end_class_complement_proc();
-//
-// };
 #endif

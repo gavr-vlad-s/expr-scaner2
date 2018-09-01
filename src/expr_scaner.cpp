@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include "../include/expr_scaner.h"
 #include "../include/sets_for_classes.h"
+#include "../include/idx_to_string.h"
+#include "../include/belongs.h"
 
 namespace escaner{
     Expr_token Expr_scaner::current_lexeme()
@@ -21,16 +23,16 @@ namespace escaner{
         lexeme_begin_ = aux_scaner_->lexeme_begin_ptr();
         switch(aetic_){
             case Aux_expr_lexem_code::Begin_char_class_complement:
-//                 aux_scaner_->back();
-//                 eti.lexeme_.code_              = Expr_lexem_code::Class_complement;
-//                 eti.lexeme_.set_of_char_index_ = get_set_complement();
+                aux_scaner_->back();
+                eti.lexeme_.code_                 = Expr_lexem_code::Class_complement;
+                eti.lexeme_.index_of_set_of_char_ = get_set_complement();
                 break;
             case Aux_expr_lexem_code::End_char_class_complement:
-                eti.lexeme_.code_              = Expr_lexem_code::UnknownLexem;
-                eti.range_                     = lexeme_pos_;
+                eti.lexeme_.code_                 = Expr_lexem_code::UnknownLexem;
+                eti.range_                        = lexeme_pos_;
             default:
-                eti.lexeme_                    = convert_lexeme(aeti_);
-                eti.range_                     = lexeme_pos_;
+                eti.lexeme_                       = convert_lexeme(aeti_);
+                eti.range_                        = lexeme_pos_;
         }
         return eti;
     }
@@ -105,13 +107,44 @@ namespace escaner{
         return eli;
     }
 
+    static const char* undefined_regexp_name = "Error at line %zu: regexp name %s is "
+                                               "undefined.\n";
+
     void Expr_scaner::check_regexp_name(size_t idx)
     {
+        auto& idsc = scope_->idsc_;
+        auto  it   = idsc.find(idx);
+        if((it == idsc.end()) ||
+           !belongs(static_cast<uint64_t>(Id_kind::Regexp_name), (it->second).kind_))
+        {
+            auto s = idx_to_string(et_.ids_trie_, idx);
+            printf(undefined_regexp_name, lexeme_pos_.begin_pos_.line_no_, s.c_str());
+            et_.ec_->increment_number_of_errors();
+            return;
+        }
     }
+
+    size_t Expr_scaner::get_set_complement()
+    {
+        set_idx = 0;
+        state   = State::Begin_class_complement;
+
+        curr_set.clear();
+
+//         while((aelic = (aeli = aux_scaner-> current_lexem()).code) !=
+//             Aux_expr_lexem_code::Nothing)
+//         {
+//             (this->*procs[static_cast<size_t>(state)])();
+//             if(State::End_class_complement == state){
+//                 break;
+//             }
+//         }
+        return set_idx;
+    }
+
 };
 
 // #include "../include/aux_expr_lexem.h"
-// #include "../include/belongs.h"
 // #include <cstdio>
 //
 // static inline uint64_t belongs(Aux_expr_lexem_code e, uint64_t s)
@@ -193,24 +226,6 @@ namespace escaner{
 // }
 //
 // void Expr_scaner::end_class_complement_proc(){}
-//
-// size_t Expr_scaner::get_set_complement()
-// {
-//     set_idx = 0;
-//     state   = State::Begin_class_complement;
-//
-//     curr_set.clear();
-//
-//     while((aelic = (aeli = aux_scaner-> current_lexem()).code) !=
-//           Aux_expr_lexem_code::Nothing)
-//     {
-//         (this->*procs[static_cast<size_t>(state)])();
-//         if(State::End_class_complement == state){
-//             break;
-//         }
-//     }
-//     return set_idx;
-// }
 // size_t Expr_scaner::lexem_begin_line_number() const
 // {
 //     return lexem_begin_line;
