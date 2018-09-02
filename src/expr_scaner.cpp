@@ -181,6 +181,14 @@ namespace escaner{
         return ::belongs(static_cast<uint64_t>(e), s);
     }
 
+    static const char* not_admissible_nsq_ndq =
+        "Error at line %zu: character classes [:ndq:] and [:nsq:] are not admissible "
+        "in the character class complement.\n";
+
+    static const char* not_admissible_lexeme =
+        "Error at line %zu: expected a character or character class, with the "
+        "exception of [:nsq:] and [:ndq:].\n";
+
     void Expr_scaner::first_char_proc()
     {
         state_ = State::Body_chars;
@@ -190,17 +198,19 @@ namespace escaner{
             const auto& s = sets_for_char_classes[char_class_to_array_index(aetic_)];
             curr_set_.insert(s.begin(), s.end());
         }else if(belongs(aetic_, classes_of_chars_with_complement)){
-    //         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
-    //         et_.ec->increment_number_of_errors();
-    //     }else{
-    //         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
-    //         et_.ec->increment_number_of_errors();
+            auto pos = aux_scaner_->lexeme_pos();
+            printf(not_admissible_nsq_ndq, pos.begin_pos_.line_no_);
+            et_.ec_->increment_number_of_errors();
+        }else{
+            auto pos = aux_scaner_->lexeme_pos();
+            printf(not_admissible_lexeme, pos.begin_pos_.line_no_);
+            et_.ec_->increment_number_of_errors();
         }
     }
 
     void Expr_scaner::body_chars_proc()
     {
-    //     state = State::Body_chars;
+        state_ = State::Body_chars;
     //     if(Aux_expr_lexem_code::Character == aelic){
     //         curr_set.insert(aeli.c);
     //     }else if(belongs(aelic, classes_of_chars_without_complement)){
@@ -230,14 +240,6 @@ namespace escaner{
 };
 
 // #include <cstdio>
-//
-// static const char* not_admissible_nsq_ndq =
-//     "Error at line %zu: character classes [:ndq:] and [:nsq:] are not admissible "
-//     "in the character class complement.\n";
-//
-// static const char* not_admissible_lexeme =
-//     "Error at line %zu: expected a character or character class, with the "
-//     "exception of [:nsq:] and [:ndq:].\n";
 //
 // void Expr_scaner::back()
 // {
