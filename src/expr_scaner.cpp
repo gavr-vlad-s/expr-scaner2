@@ -135,16 +135,11 @@ namespace escaner{
         while((aetic_ = (aeti_ = aux_scaner_->current_lexeme()).lexeme_.code_) !=
               Aux_expr_lexem_code::Nothing)
         {
+            (this->*procs_[static_cast<size_t>(state_)])();
+            if(State::End_class_complement == state_){
+                break;
+            }
         }
-
-//         while((aelic = (aeli = aux_scaner-> current_lexem()).code) !=
-//             Aux_expr_lexem_code::Nothing)
-//         {
-//             (this->*procs[static_cast<size_t>(state)])();
-//             if(State::End_class_complement == state){
-//                 break;
-//             }
-//         }
         return set_idx_;
     }
 
@@ -211,21 +206,23 @@ namespace escaner{
     void Expr_scaner::body_chars_proc()
     {
         state_ = State::Body_chars;
-    //     if(Aux_expr_lexem_code::Character == aelic){
-    //         curr_set.insert(aeli.c);
-    //     }else if(belongs(aelic, classes_of_chars_without_complement)){
-    //         const auto& s = sets_for_char_classes[char_class_to_array_index(aelic)];
-    //         curr_set.insert(s.begin(), s.end());
-    //     }else if(belongs(aelic, classes_of_chars_with_complement)){
-    //         printf(not_admissible_nsq_ndq, aux_scaner->lexem_begin_line_number());
-    //         et_.ec->increment_number_of_errors();
-    //     }else if(Aux_expr_lexem_code::End_char_class_complement == aelic){
-    //         set_idx = compl_set_trie->insertSet(curr_set);
-    //         state = State::End_class_complement;
-    //     }else{
-    //         printf(not_admissible_lexeme, aux_scaner->lexem_begin_line_number());
-    //         et_.ec->increment_number_of_errors();
-    //     }
+        if(Aux_expr_lexem_code::Character == aetic_){
+            curr_set_.insert(aeti_.lexeme_.c_);
+        }else if(belongs(aetic_, classes_of_chars_without_complement)){
+            const auto& s = sets_for_char_classes[char_class_to_array_index(aetic_)];
+            curr_set_.insert(s.begin(), s.end());
+        }else if(belongs(aetic_, classes_of_chars_with_complement)){
+            auto pos = aux_scaner_->lexeme_pos();
+            printf(not_admissible_nsq_ndq, pos.begin_pos_.line_no_);
+            et_.ec_->increment_number_of_errors();
+        }else if(Aux_expr_lexem_code::End_char_class_complement == aetic_){
+            set_idx_ = set_trie_->insertSet(curr_set_);
+            state_   = State::End_class_complement;
+        }else{
+            auto pos = aux_scaner_->lexeme_pos();
+            printf(not_admissible_lexeme, pos.begin_pos_.line_no_);
+            et_.ec_->increment_number_of_errors();
+        }
     }
 
     void Expr_scaner::end_class_complement_proc()
