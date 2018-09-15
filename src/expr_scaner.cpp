@@ -216,8 +216,10 @@ namespace escaner{
             printf(not_admissible_nsq_ndq, pos.begin_pos_.line_no_);
             et_.ec_->increment_number_of_errors();
         }else if(Aux_expr_lexem_code::End_char_class_complement == aetic_){
-            set_idx_ = set_trie_->insertSet(curr_set_);
-            state_   = State::End_class_complement;
+            set_idx_             = set_trie_->insertSet(curr_set_);
+            state_               = State::End_class_complement;
+            auto pos             = aux_scaner_->lexeme_pos();
+            lexeme_pos_.end_pos_ = pos.end_pos_;
         }else{
             auto pos = aux_scaner_->lexeme_pos();
             printf(not_admissible_lexeme, pos.begin_pos_.line_no_);
