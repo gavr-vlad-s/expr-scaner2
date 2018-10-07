@@ -13,6 +13,8 @@
 #include "../include/idx_to_string.h"
 #include "../include/belongs.h"
 #include "../include/aux_expr_lexem.h"
+#include "../include/print_char32.h"
+#include "../include/operations_with_sets.h"
 
 namespace escaner{
     Expr_token Expr_scaner::current_lexeme()
@@ -231,11 +233,73 @@ namespace escaner{
     {
     }
 
+    char32_t* Expr_scaner::lexeme_begin_ptr() const
+    {
+        return lexeme_begin_;
+    }
     // size_t Expr_scaner::lexem_begin_line_number() const
     // {
     //     return lexem_begin_line;
     // }
 
+    void Expr_scaner::back()
+    {
+        loc_->pcurrent_char_ = lexeme_begin_;
+        loc_->pos_           = lexeme_pos_.begin_pos_;
+    }
+
+    std::string Expr_scaner::token_to_string(const Expr_token& tok)
+    {
+        std::string result;
+        auto&       p      = tok.range_;
+        auto&       b      = p.begin_pos_;
+        auto&       e      = p.end_pos_;
+        result             = "[line: " + std::to_string(b.line_no_)  +
+                             ", pos: " + std::to_string(b.line_pos_) + "]";
+        if(b.line_no_ != e.line_no_){
+            result += "--[line: " + std::to_string(e.line_no_)  +
+                      ", pos: "   + std::to_string(e.line_pos_) + "]";
+        }
+        result += " lexeme: " + lexeme_to_string(tok.lexeme_);
+        return result;
+    }
+
+    static const std::string codes_str[] = {
+        "Nothing ",             "UnknownLexem ",        "Action ",
+        "Regexp_name ",         "Opened_round_brack ",  "Closed_round_brack ",
+        "Or ",                  "Kleene_closure ",      "Positive_closure ",
+        "Optional_member ",     "Character ",           "Begin_expression ",
+        "End_expression ",      "Class_complement ",    "Character_class "
+    };
+
+    std::string Expr_scaner::lexeme_to_string(const Expr_lexem_info& li)
+    {
+        using namespace operations_with_sets;
+        std::string result;
+        auto        lic    = li.code_;
+        result             = codes_str[static_cast<unsigned>(lic)];
+        switch(li.code_){
+            case Expr_lexem_code::Action:
+                result += idx_to_string(et_.ids_trie_, li.action_name_index_);
+                break;
+            case Expr_lexem_code::Regexp_name:
+                result += idx_to_string(et_.ids_trie_, li.regexp_name_index_);
+                break;
+            case Expr_lexem_code::Character:
+                result += show_char32(li.c_);
+                break;
+            case Expr_lexem_code::Class_complement:
+            case Expr_lexem_code::Character_class:
+                {
+                    auto s =  set_trie_->get_set(li.index_of_set_of_char_);
+                    result += show_set(s, show_char32);
+                }
+                break;
+            default:
+                ;
+        }
+        return result;
+    }
 };
 
 // #include <cstdio>
