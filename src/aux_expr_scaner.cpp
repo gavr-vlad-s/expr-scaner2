@@ -460,7 +460,7 @@ static const char* lexem_names[] = {
     "M_Class_xdigits", "M_Class_ndq",                 "M_Class_nsq"
 };
 
-std::string Aux_expr_scaner::lexeme_to_string(const Aux_expr_lexem_info li)
+std::string Aux_expr_scaner::lexeme_to_string(const Aux_expr_lexem_info& li)
 {
     std::string         result;
     Aux_expr_lexem_code lc    = li.code_;

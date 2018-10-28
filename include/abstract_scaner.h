@@ -43,7 +43,7 @@ namespace ascaner{
         Position_range      lexeme_pos()       const;
         char32_t*           lexeme_begin_ptr() const;
 
-        virtual std::string lexeme_to_string(const Lexeme_type li) = 0;
+        virtual std::string lexeme_to_string(const Lexeme_type& li) = 0;
 
         std::string token_to_string(const Token<Lexeme_type>& tok);
     protected:
