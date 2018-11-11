@@ -1,0 +1,28 @@
+    { } (
+)
+*
+
+         ? | +
+01234567
+
+\% \$ \\ \^ \( \)
+            \ \я \{
+    \}
+
+          \"
+    " \| \n \* \+ \?
+
+a bc d y   ^ [  ]
+
+ [:Latin:] | [:latin:]  [:Russian:]  [:russian:]  [:bdigits:]
+        [:odigits:]  [:digits:]
+         [:xdigits:]
+    [:Letter:]       [:letter:]
+        [:nsq:]  [:ndq:]
+
+
+            однажды ранним утром
+        $write
+
+
+     $add_dec_digit0
