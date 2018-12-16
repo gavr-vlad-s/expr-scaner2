@@ -112,12 +112,10 @@ namespace ascaner{
         auto&       p      = tok.range_;
         auto&       b      = p.begin_pos_;
         auto&       e      = p.end_pos_;
-        result             = "[line: " + std::to_string(b.line_no_)  +
-                             ", pos: " + std::to_string(b.line_pos_) + "]";
-        if(b.line_no_ != e.line_no_){
-            result += "--[line: " + std::to_string(e.line_no_)  +
-                      ", pos: "   + std::to_string(e.line_pos_) + "]";
-        }
+        result             = "[line: "   + std::to_string(b.line_no_)  +
+                             ", pos: "   + std::to_string(b.line_pos_) + "]"
+                             "--[line: " + std::to_string(e.line_no_)  +
+                             ", pos: "   + std::to_string(e.line_pos_) + "]";
         result += " lexeme: " + lexeme_to_string(tok.lexeme_);
         return result;
     }
