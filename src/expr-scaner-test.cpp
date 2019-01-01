@@ -90,9 +90,9 @@ void test_expr_scaner(const std::shared_ptr<escaner::Expr_scaner>& expr_scaner)
 //            name_in_utf8.c_str(), idx);
 // }
 
-void add_regexp_name(Errors_and_tries&       etr,
-                     std::shared_ptr<Scope>& scope,
-                     const std::u32string&   name)
+static void add_regexp_name(Errors_and_tries&       etr,
+                            std::shared_ptr<Scope>& scope,
+                            const std::u32string&   name)
 {
     Id_attributes iattr;
     iattr.kind_             = 1u << static_cast<uint8_t>(Id_kind::Regexp_name);
@@ -101,6 +101,20 @@ void add_regexp_name(Errors_and_tries&       etr,
 
     auto name_in_utf8 = u32string_to_utf8(name);
     printf("Index of regexp name %s is %zu.\n", name_in_utf8.c_str(), idx);
+}
+
+static const std::u32string regexp_names[] = {
+    U"decimal_code", U"octal_code",   U"binary_code",
+    U"hex_code",     U"char_by_code", U"quoted_string",
+    U"full_string"
+};
+
+static void add_regexp_names(Errors_and_tries&       etr,
+                             std::shared_ptr<Scope>& scope)
+{
+    for(const auto& n : regexp_names){
+        add_regexp_name(etr, scope, n);
+    }
 }
 
 int main(int argc, char* argv[])
@@ -122,6 +136,8 @@ int main(int argc, char* argv[])
     et.ids_trie_             = std::make_shared<Char_trie>();
     et.strs_trie_            = std::make_shared<Char_trie>();
     auto              scp    = std::make_shared<Scope>();
+
+    add_regexp_names(et, scp);
 
 //     add_action(et, scp, write_act_name,          write_act_body);
 //     add_action(et, scp, add_dec_digit_act_name,  add_dec_digit_act_body);
