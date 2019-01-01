@@ -1,0 +1,92 @@
+Index of regexp name decimal_code is 12.
+Index of regexp name octal_code is 22.
+Index of regexp name binary_code is 33.
+Index of regexp name hex_code is 41.
+Index of regexp name char_by_code is 53.
+Index of regexp name quoted_string is 66.
+Index of regexp name full_string is 77.
+[line: 1, pos: 5] lexeme: Begin_expression 
+[line: 1, pos: 7] lexeme: End_expression 
+[line: 1, pos: 9] lexeme: Opened_round_brack 
+[line: 2, pos: 1] lexeme: Closed_round_brack 
+[line: 3, pos: 1] lexeme: Kleene_closure 
+[line: 5, pos: 10] lexeme: Optional_member 
+[line: 5, pos: 12] lexeme: Or 
+[line: 5, pos: 14] lexeme: Positive_closure 
+[line: 6, pos: 1] lexeme: Character '0'
+[line: 6, pos: 2] lexeme: Character '1'
+[line: 6, pos: 3] lexeme: Character '2'
+[line: 6, pos: 4] lexeme: Character '3'
+[line: 6, pos: 5] lexeme: Character '4'
+[line: 6, pos: 6] lexeme: Character '5'
+[line: 6, pos: 7] lexeme: Character '6'
+[line: 6, pos: 8] lexeme: Character '7'
+[line: 8, pos: 1] lexeme: Character '%'
+[line: 8, pos: 4] lexeme: Character '$'
+[line: 8, pos: 7] lexeme: Character '\\'
+[line: 8, pos: 10] lexeme: Character '^'
+[line: 8, pos: 13] lexeme: Character '('
+[line: 8, pos: 16] lexeme: Character ')'
+[line: 9, pos: 13] lexeme: Character '\\'
+[line: 9, pos: 15] lexeme: Character '\\'
+[line: 9, pos: 16] lexeme: Character 'я'
+[line: 9, pos: 18] lexeme: Character '{'
+[line: 10, pos: 5] lexeme: Character '}'
+[line: 12, pos: 11] lexeme: Character \"
+[line: 13, pos: 5] lexeme: Character \"
+[line: 13, pos: 7] lexeme: Character '|'
+[line: 13, pos: 10] lexeme: Character '\n'
+[line: 13, pos: 13] lexeme: Character '*'
+[line: 13, pos: 16] lexeme: Character '+'
+[line: 13, pos: 19] lexeme: Character '\?'
+[line: 15, pos: 1] lexeme: Character 'a'
+[line: 15, pos: 3] lexeme: Character 'b'
+[line: 15, pos: 4] lexeme: Character 'c'
+[line: 15, pos: 6] lexeme: Character 'd'
+[line: 15, pos: 8] lexeme: Character 'y'
+[line: 15, pos: 13] lexeme: Character '^'
+[line: 15, pos: 15] lexeme: Character '['
+[line: 15, pos: 18] lexeme: Character ']'
+[line: 17, pos: 2] lexeme: Character_class {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z';
+[line: 17, pos: 12] lexeme: Or 
+[line: 17, pos: 14] lexeme: Character_class {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z';
+[line: 17, pos: 25] lexeme: Character_class {'Ё','А','Б','В','Г','Д','Е','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я';
+[line: 17, pos: 38] lexeme: Character_class {'а','б','в','г','д','е','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я','ё';
+[line: 17, pos: 51] lexeme: Character_class {'0','1';
+[line: 18, pos: 9] lexeme: Character_class {'0','1','2','3','4','5','6','7';
+[line: 18, pos: 22] lexeme: Character_class {'0','1','2','3','4','5','6','7','8','9';
+[line: 19, pos: 10] lexeme: Character_class {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f';
+[line: 20, pos: 5] lexeme: Character_class {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','Ё','А','Б','В','Г','Д','Е','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я';
+[line: 20, pos: 22] lexeme: Character_class {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','а','б','в','г','д','е','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я','ё';
+[line: 21, pos: 9] lexeme: Class_complement {\';
+[line: 21, pos: 18] lexeme: Class_complement {\";
+[line: 24, pos: 13] lexeme: Character 'о'
+[line: 24, pos: 14] lexeme: Character 'д'
+[line: 24, pos: 15] lexeme: Character 'н'
+[line: 24, pos: 16] lexeme: Character 'а'
+[line: 24, pos: 17] lexeme: Character 'ж'
+[line: 24, pos: 18] lexeme: Character 'д'
+[line: 24, pos: 19] lexeme: Character 'ы'
+[line: 24, pos: 21] lexeme: Character 'р'
+[line: 24, pos: 22] lexeme: Character 'а'
+[line: 24, pos: 23] lexeme: Character 'н'
+[line: 24, pos: 24] lexeme: Character 'н'
+[line: 24, pos: 25] lexeme: Character 'и'
+[line: 24, pos: 26] lexeme: Character 'м'
+[line: 24, pos: 28] lexeme: Character 'у'
+[line: 24, pos: 29] lexeme: Character 'т'
+[line: 24, pos: 30] lexeme: Character 'р'
+[line: 24, pos: 31] lexeme: Character 'о'
+[line: 24, pos: 32] lexeme: Character 'м'
+[line: 25, pos: 9] lexeme: Action write
+[line: 28, pos: 9] lexeme: Regexp_name decimal_code
+[line: 28, pos: 37] lexeme: Regexp_name octal_code
+[line: 29, pos: 1] lexeme: Regexp_name binary_code
+[line: 29, pos: 18] lexeme: Regexp_name hex_code
+[line: 37, pos: 17] lexeme: Regexp_name char_by_code
+[line: 39, pos: 6] lexeme: Action add_dec_digit0
+[line: 41, pos: 1] lexeme: Regexp_name quoted_string
+[line: 41, pos: 1] lexeme: Regexp_name full_string
+[line: 41, pos: 1] lexeme: Nothing 
+
+Total errors 0

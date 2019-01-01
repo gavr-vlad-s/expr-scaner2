@@ -1,0 +1,42 @@
+    { } (
+)
+*
+
+         ? | +
+01234567
+
+\% \$ \\ \^ \( \)
+            \ \я \{
+    \}
+
+          \"
+    " \| \n \* \+ \?
+
+a bc d y   ^ [  ]
+
+ [:Latin:] | [:latin:]  [:Russian:]  [:russian:]  [:bdigits:]
+        [:odigits:]  [:digits:]
+         [:xdigits:]
+    [:Letter:]       [:letter:]
+        [:nsq:]  [:ndq:]
+
+
+            однажды ранним утром
+        $write
+
+
+        %decimal_code               %octal_code
+%binary_code     %hex_code
+
+
+
+
+
+
+
+                %char_by_code
+
+     $add_dec_digit0
+
+%quoted_string
+    %full_string
