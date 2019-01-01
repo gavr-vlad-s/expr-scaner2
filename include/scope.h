@@ -33,13 +33,13 @@ struct Id_attributes{
     /**
      * The numerical value of the lexeme code, if the identifier is the lexem code.
      */
-    size_t code_;
+    size_t   code_       = 0;
     /**
      * The index of the string literal, which is the definition of the action,
      * in the prefix tree of string literals, if the identifier is the name of
      * the action.
      */
-    size_t act_string_;
+    size_t   act_string_ = 0;
 };
 
 enum class Str_kind : uint16_t{

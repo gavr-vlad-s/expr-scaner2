@@ -90,6 +90,19 @@ void test_expr_scaner(const std::shared_ptr<escaner::Expr_scaner>& expr_scaner)
 //            name_in_utf8.c_str(), idx);
 // }
 
+void add_regexp_name(Errors_and_tries&       etr,
+                     std::shared_ptr<Scope>& scope,
+                     const std::u32string&   name)
+{
+    Id_attributes iattr;
+    iattr.kind_             = 1u << static_cast<uint8_t>(Id_kind::Regexp_name);
+    size_t        idx       = etr.ids_trie_ -> insert(name);
+    scope->idsc_[idx]       = iattr;
+
+    auto name_in_utf8 = u32string_to_utf8(name);
+    printf("Index of regexp name %s is %zu.\n", name_in_utf8.c_str(), idx);
+}
+
 int main(int argc, char* argv[])
 {
     if(1 == argc){
